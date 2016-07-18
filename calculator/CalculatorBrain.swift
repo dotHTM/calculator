@@ -8,10 +8,14 @@
 
 import Foundation
 
+let M_PHI = 1.6180339887498948482
+
 class CalculatorBrain
 {
   private var accumulator = 0.0
   private var internalProgram = [AnyObject]()
+  
+  var calculationErrorMessage = " "
 
   var description = " "
 
@@ -26,8 +30,21 @@ class CalculatorBrain
   private var operations: Dictionary<String, Operation> = [
     "π" : Operation.Constant(M_PI),
     "e" : Operation.Constant(M_E),
+    "ɸ" : Operation.Constant(M_PHI),
     "√" : Operation.UnaryOperation(sqrt),
     "cos" : Operation.UnaryOperation(cos),
+    "sin" : Operation.UnaryOperation(sin),
+    "tan" : Operation.UnaryOperation(tan),
+    "1/x" : Operation.UnaryOperation({
+      if $0 != 0 {
+        return 1.0 / $0
+      } else {
+        return 0.0
+      }
+    }),
+    "ln":Operation.UnaryOperation(log),
+    "log":Operation.UnaryOperation(log10),
+    "log2":Operation.UnaryOperation(log2),
     "+" : Operation.BinaryOperation({ $0 + $1 }),
     "−" : Operation.BinaryOperation({ $0 - $1 }),
     "×" : Operation.BinaryOperation({ $0 * $1 }),
@@ -74,6 +91,7 @@ class CalculatorBrain
     pending = nil
     internalProgram.removeAll()
     description = " "
+    calculationErrorMessage = " "
   }
 
   func performOperation(symbol: String) {

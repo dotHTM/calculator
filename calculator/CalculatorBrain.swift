@@ -28,10 +28,10 @@ class CalculatorBrain
   }
 
   private var operations: Dictionary<String, Operation> = [
-    "π" : Operation.Constant(M_PI),
-    "e" : Operation.Constant(M_E),
-    "ɸ" : Operation.Constant(M_PHI),
-    "√" : Operation.UnaryOperation(sqrt),
+    "π"   : Operation.Constant(M_PI),
+    "e"   : Operation.Constant(M_E),
+    "ɸ"   : Operation.Constant(M_PHI),
+    "√"   : Operation.UnaryOperation(sqrt),
     "cos" : Operation.UnaryOperation(cos),
     "sin" : Operation.UnaryOperation(sin),
     "tan" : Operation.UnaryOperation(tan),
@@ -42,14 +42,14 @@ class CalculatorBrain
         return 0.0
       }
     }),
-    "ln":Operation.UnaryOperation(log),
-    "log":Operation.UnaryOperation(log10),
-    "log2":Operation.UnaryOperation(log2),
-    "+" : Operation.BinaryOperation({ $0 + $1 }),
-    "−" : Operation.BinaryOperation({ $0 - $1 }),
-    "×" : Operation.BinaryOperation({ $0 * $1 }),
-    "÷" : Operation.BinaryOperation({ $0 / $1 }),
-    "=" : Operation.Equals,
+    "ln"   : Operation.UnaryOperation(log),
+    "log"  : Operation.UnaryOperation(log10),
+    "log2" : Operation.UnaryOperation(log2),
+    "+"    : Operation.BinaryOperation({ $0 + $1 }),
+    "−"    : Operation.BinaryOperation({ $0 - $1 }),
+    "×"    : Operation.BinaryOperation({ $0 * $1 }),
+    "÷"    : Operation.BinaryOperation({ $0 / $1 }),
+    "="    : Operation.Equals,
     ]
 
   enum Operation {

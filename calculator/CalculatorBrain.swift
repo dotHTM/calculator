@@ -13,7 +13,7 @@ let M_PHI = 1.6180339887498948482
 class CalculatorBrain
 {
     // MARK: - Variables and such
-
+    
     var calculationErrorMessage = " "
     var description = " "
     var isPartialResult = false
@@ -33,6 +33,7 @@ class CalculatorBrain
     func clear() {
         accumulator = 0.0
         pending = nil
+        isPartialResult = false
         internalProgram.removeAll()
         description = " "
         calculationErrorMessage = " "
@@ -43,7 +44,9 @@ class CalculatorBrain
     func setOperand(operand: Double) {
         accumulator = operand
         internalProgram.append(operand)
+        description += String(operand)
     }
+    
     
     private var operations: Dictionary<String, Operation> = [
         "π"   : Operation.Constant(M_PI),
@@ -53,13 +56,7 @@ class CalculatorBrain
         "cos" : Operation.UnaryOperation(cos),
         "sin" : Operation.UnaryOperation(sin),
         "tan" : Operation.UnaryOperation(tan),
-        "1/x" : Operation.UnaryOperation({
-            if $0 != 0 {
-                return 1.0 / $0
-            } else {
-                return 0.0
-            }
-        }),
+        "1/x" : Operation.UnaryOperation({ 1 / $0 }),
         "ln"   : Operation.UnaryOperation(log),
         "log"  : Operation.UnaryOperation(log10),
         "log2" : Operation.UnaryOperation(log2),
@@ -113,32 +110,48 @@ class CalculatorBrain
             isPartialResult = false
         }
     }
-
+    
     func performOperation(symbol: String) {
         if let operation = operations[symbol] {
             switch operation {
                 
             case .Constant(let value):
                 accumulator = value
-                
+                description += symbol
                 
             case .UnaryOperation(let function):
-                accumulator = function(accumulator)
                 executePendingBinaryOperation()
+                if symbol == "1/x"{
+                    if accumulator == 0.0 {
+                        description = symbol + "(" +  description + ") = ERROR(Divide by Zero) "
+                        accumulator = -1.0
+                        break
+                    }
+                }
+                accumulator = function(accumulator)
+                description = symbol + "(" +  description + ")"
+                
                 
             case .BinaryOperation(let function):
-                executePendingBinaryOperation()
+                if pending != nil{
+                    executePendingBinaryOperation()
+                    // if symbol == "×" || symbol == "÷" {
+                    description = "(" +  description + ")"
+                    // }
+                }
                 pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator)
                 isPartialResult = true
-                
+                description += symbol
                 
             case .Equals:
                 executePendingBinaryOperation()
             }
         }
+        if !description.containsString("ERROR") {
         internalProgram.append(symbol)
+        }
     }
-    
-    
-    
 }
+
+
+

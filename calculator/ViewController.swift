@@ -99,8 +99,9 @@ class ViewController: UIViewController {
   private func updateDisplayAfterButton() {
     displayValue = brain.result
     descriptionDisplayValue = brain.description
-    if brain.isPartialResult {
+    if brain.isPartialResult || userIsInTheMiddleOfTyping {
       descriptionDisplayValue = descriptionDisplayValue + "..."
+        
     } else {
       descriptionDisplayValue = descriptionDisplayValue + "="
     }
